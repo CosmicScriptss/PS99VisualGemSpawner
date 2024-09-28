@@ -1,0 +1,35 @@
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/random%202"))()
+local One = library:Window("Gem Spawner")
+
+local desiredAmount = 0
+
+One:Box("Gems =", "Type Here!", function(inputText)
+    desiredAmount = tonumber(inputText) or 0
+end)
+
+One:Button("Start Spawning Gems", function()
+    local library = require(game.ReplicatedStorage.Library.Client.CurrencyCmds)
+    local originalGetFunction = library.Get
+    local poop = originalGetFunction("Diamonds")
+    if desiredAmount > 0 and desiredAmount <= 25000000000 then
+        local increment = desiredAmount / 15
+        local delayTime = 0.1
+        library.Get = function(currencyId)
+            if currencyId == "Diamonds" then
+                return poop
+            else
+                return originalGetFunction(currencyId)
+            end
+        end
+        
+        while poop < desiredAmount do
+            poop = poop + increment
+            print(library.Get("Diamonds"))
+            wait(delayTime)
+        end
+    else
+        
+        local message = require(game.ReplicatedStorage.Library.Client.Message)
+        message.Error("Hey, You Need To Enter A Number Between 0 And 25b!")
+    end
+end)
